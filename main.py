@@ -23,6 +23,22 @@ def run_customer_bot():
     print("🚀 جاري تشغيل بوت العملاء...")
     customer_bot.infinity_polling(timeout=10, long_polling_timeout=5)
 
+def run_admin_panel():
+    try:
+        print("🚀 جاري تشغيل لوحة الإدارة الويب (منفذ 5000)...")
+        from Admin_Panel.app import app as admin_app
+        admin_app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
+    except Exception as e:
+        print(f"🚨 فشل تشغيل لوحة الإدارة الويب: {e}")
+
+def run_customer_panel():
+    try:
+        print("🚀 جاري تشغيل بوابة العملاء الويب (منفذ 5001)...")
+        from Customer_Panel.app import app as customer_app
+        customer_app.run(host="0.0.0.0", port=5001, debug=False, use_reloader=False)
+    except Exception as e:
+        print(f"🚨 فشل تشغيل بوابة العملاء الويب: {e}")
+
 if __name__ == "__main__":
     # 0. تشغيل فاحص التحديثات التلقائي
     start_updater(interval_seconds=30)
@@ -37,5 +53,16 @@ if __name__ == "__main__":
     # 3. تشغيل بوت العميل في مسار مستقل
     t_customer = threading.Thread(target=run_customer_bot)
     t_customer.start()
+
+    # 4. تشغيل لوحة الإدارة الويب في الخلفية
+    t_admin_web = threading.Thread(target=run_admin_panel)
+    t_admin_web.daemon = True
+    t_admin_web.start()
+
+    # 5. تشغيل بوابة العملاء الويب في الخلفية
+    t_customer_web = threading.Thread(target=run_customer_panel)
+    t_customer_web.daemon = True
+    t_customer_web.start()
+
 
     
