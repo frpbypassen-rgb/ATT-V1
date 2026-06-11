@@ -1,6 +1,7 @@
 import threading
 from keep_alive import keep_alive
 from config import admin_bot, customer_bot
+from auto_updater import start_updater
 
 # استدعاء ملفات الأوامر لتشغيلها في الذاكرة
 import Admin_bot.admin_main
@@ -23,6 +24,9 @@ def run_customer_bot():
     customer_bot.infinity_polling(timeout=10, long_polling_timeout=5)
 
 if __name__ == "__main__":
+    # 0. تشغيل فاحص التحديثات التلقائي
+    start_updater(interval_seconds=30)
+
     # 1. تشغيل السيرفر الوهمي لإرضاء Render
     keep_alive()
     
@@ -33,4 +37,5 @@ if __name__ == "__main__":
     # 3. تشغيل بوت العميل في مسار مستقل
     t_customer = threading.Thread(target=run_customer_bot)
     t_customer.start()
+
     
