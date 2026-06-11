@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الأهرام | دخول آمن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --brand-orange: #f37021;
+            --brand-dark: #1e1e24;
+            --surface-white: #ffffff;
+            --input-bg: #f8fafc;
+            --card-width: 460px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 0% 0%, rgba(243, 112, 33, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 100% 100%, rgba(77, 77, 79, 0.08) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: var(--card-width);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--surface-white);
+            border-radius: 32px;
+            padding: 50px 45px;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.12),
+                        0 18px 36px -18px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 35px auto;
+            width: 100%;
+            max-width: 260px; 
+            height: 120px; 
+            position: relative;
+        }
+
+        .logo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            mix-blend-mode: multiply; 
+            filter: contrast(1.15) brightness(1.05); 
+            transition: transform 0.4s ease;
+        }
+
+        .logo-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        .welcome-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--brand-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-text p {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 35px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+            text-align: right;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 8px;
+            margin-right: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 18px;
+            color: #94a3b8;
+            font-size: 18px;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 56px;
+            background: var(--input-bg);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 0 50px 0 20px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--brand-dark);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            background: #fff;
+            border-color: var(--brand-orange);
+            box-shadow: 0 0 0 4px rgba(243, 112, 33, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            height: 56px;
+            background: var(--brand-dark);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-login:hover {
+            background: var(--brand-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -10px rgba(243, 112, 33, 0.5);
+        }
+
+        .alert {
+            background: #fff1f2;
+            border: 1px solid #ffe4e6;
+            color: #e11d48;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copyright {
+            margin-top: 35px;
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card shadow-2xl">
+            
+            <div class="logo-wrapper">
+                <img src="{{ url_for('static', filename='images/alhram_logo.jpg') }}" alt="شركة الأهرام">
+            </div>
+
+            <div class="welcome-text">
+                <h1>لوحة الإدارة المركزية</h1>
+                <p>سجل دخولك لمتابعة العمليات اليومية</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label class="field-label">اسم المستخدم</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-circle"></i>
+                        <input type="text" name="username" class="form-control" placeholder="أدخل اسم المستخدم" required autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label">كلمة المرور</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-shield-alt"></i>
+                        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    دخول المنصة <i class="fas fa-arrow-left"></i>
+                </button>
+            </form>
+
+            <div class="copyright">
+                Alhram Telecom and Technology &copy; 2026
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

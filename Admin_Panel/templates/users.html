@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}إدارة العملاء{% endblock %}
+{% block header_title %}حسابات وأرصدة العملاء{% endblock %}
+
+{% block content %}
+<div class="mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div class="input-group input-group-lg shadow-sm" style="border-radius: 15px; overflow: hidden; max-width: 500px; flex-grow: 1;">
+        <span class="input-group-text bg-white border-0"><i class="fas fa-search text-warning"></i></span>
+        <input type="text" id="userSearch" class="form-control border-0 fs-6" placeholder="ابحث باسم العميل أو المعرف (ID)..." style="box-shadow: none;">
+    </div>
+    <div>
+        <span class="badge bg-dark fs-6 px-4 py-3 rounded-4 shadow-sm">
+            <i class="fas fa-users me-2 text-warning"></i> إجمالي العملاء: {{ customers|length }}
+        </span>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}
+        <div class="alert alert-{{ category }} rounded-4 fw-bold shadow-sm mb-4 border-0"><i class="fas fa-info-circle me-2"></i> {{ message }}</div>
+    {% endfor %}{% endif %}
+{% endwith %}
+
+<div class="row g-4" id="usersContainer">
+    {% for u in customers %}
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 user-card-item">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 20px; transition: all 0.3s ease;">
+            <div class="card-body p-4 text-center position-relative">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm border border-white border-4" style="width: 80px; height: 80px;">
+                    <i class="fas fa-user-tie fs-1" style="color: var(--primary-orange);"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1 user-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ u.display_name }}</h5>
+                <p class="text-muted small mb-4 user-id">ID: {{ u.user_id_field }}</p>
+                <div class="bg-success-subtle rounded-4 p-3 mb-4 border border-success border-opacity-25">
+                    <span class="d-block text-success small fw-bold mb-1"><i class="fas fa-wallet me-1"></i> الرصيد الحالي</span>
+                    <h4 class="fw-black text-success mb-0">{{ u.formatted_balance }} <small class="fs-6 fw-bold">د.ل</small></h4>
+                </div>
+                <form action="/update_balance/{{ u.user_id_field }}" method="POST" class="mb-4">
+                    <div class="input-group shadow-sm" style="border-radius: 12px; overflow: hidden;">
+                        <input type="number" step="0.01" name="new_balance" class="form-control text-center fw-bold border-0 bg-light" value="{{ u.formatted_balance }}">
+                        <button type="submit" class="btn btn-dark fw-bold px-3"><i class="fas fa-save text-warning"></i></button>
+                    </div>
+                </form>
+                <a href="/user_profile/{{ u.user_id_field }}" class="btn btn-outline-primary w-100 fw-bold shadow-sm" style="border-radius: 12px; border-width: 2px;">
+                    <i class="fas fa-id-card-alt me-2"></i> عرض ملف العميل
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('userSearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        document.querySelectorAll('.user-card-item').forEach(card => {
+            let uName = card.querySelector('.user-name').textContent.toLowerCase();
+            let uId = card.querySelector('.user-id').textContent.toLowerCase();
+            card.style.display = (uName.includes(filter) || uId.includes(filter)) ? '' : 'none';
+        });
+    });
+    document.querySelectorAll('.user-card-item .card').forEach(card => {
+        card.addEventListener('mouseenter', () => { card.style.transform = 'translateY(-8px)'; card.style.boxShadow = '0 15px 30px rgba(0,0,0,0.1)'; });
+        card.addEventListener('mouseleave', () => { card.style.transform = 'translateY(0)'; card.style.boxShadow = '0 .125rem .25rem rgba(0,0,0,.075)'; });
+    });
+</script>
+{% endblock %}

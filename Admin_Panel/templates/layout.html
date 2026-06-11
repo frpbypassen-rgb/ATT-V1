@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | شركة الأهرام للاتصالات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        :root { --primary-orange: #f37021; --dark-sidebar: #111827; --bg-body: #f8fafc; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-body); margin: 0; display: flex; }
+        .sidebar { width: 280px; height: 100vh; background: var(--dark-sidebar); color: white; position: fixed; right: 0; top: 0; padding: 30px 20px; z-index: 1000; }
+        .sidebar-logo { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo img { width: 180px; filter: brightness(1.1) contrast(1.1); mix-blend-mode: screen; }
+        .nav-link { color: #94a3b8; padding: 14px 20px; border-radius: 12px; margin-bottom: 8px; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-link:hover, .nav-link.active { background: rgba(243, 112, 33, 0.1); color: var(--primary-orange); }
+        .nav-link.active { background: var(--primary-orange); color: white !important; }
+        .main-content { margin-right: 280px; width: calc(100% - 280px); padding: 40px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .profile-info { display: flex; align-items: center; gap: 15px; }
+        {% block style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo"><img src="{{ url_for('static', filename='images/alhram_logo.jpg') }}" alt="الأهرام"></div>
+        <nav>
+            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}"><i class="fas fa-chart-line"></i> الإحصائيات</a>
+            <a href="/users" class="nav-link {% if request.path == '/users' %}active{% endif %}"><i class="fas fa-users"></i> إدارة العملاء</a>
+            <a href="/upload" class="nav-link {% if request.path == '/upload' %}active{% endif %}"><i class="fas fa-cloud-upload-alt"></i> رفع الأكواد</a>
+            <a href="/search_card" class="nav-link {% if request.path == '/search_card' %}active{% endif %}"><i class="fas fa-search"></i> البحث عن كرت</a>
+            <a href="/invoices" class="nav-link {% if request.path == '/invoices' %}active{% endif %}"><i class="fas fa-file-invoice-dollar"></i> سجل المبيعات</a>
+            <hr style="border-color: rgba(255,255,255,0.1)">
+            <a href="/logout" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+        </nav>
+    </div>
+    <div class="main-content">
+        <div class="top-bar">
+            <div>
+                <h4 class="fw-bold mb-0">{% block header_title %}{% endblock %}</h4>
+                <p class="text-muted small">نظام إدارة شركة الأهرام للاتصالات والتقنية</p>
+            </div>
+            <div class="profile-info">
+                <span class="fw-bold">مرحباً، مهندس محمد</span>
+                <div class="bg-dark rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="fas fa-user-tie"></i></div>
+            </div>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

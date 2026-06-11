@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block title %}الرئيسية{% endblock %}
+{% block header_title %}تحليل أداء المنظومة{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-right: 6px solid var(--primary-orange) !important;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-muted fw-bold">إجمالي المبيعات</h6>
+                    <h2 class="fw-black mb-0">{{ sales }} <small style="font-size: 14px;">د.ل</small></h2>
+                </div>
+                <div class="bg-light p-3 rounded-4 text-warning"><i class="fas fa-coins fa-2xl"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-right: 6px solid #10b981 !important;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-muted fw-bold">كروت تم بيعها</h6>
+                    <h2 class="fw-black mb-0 text-success">{{ sold_count }}</h2>
+                </div>
+                <div class="bg-light p-3 rounded-4 text-success"><i class="fas fa-check-double fa-2xl"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-right: 6px solid #3b82f6 !important;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-muted fw-bold">مخزون متوفر</h6>
+                    <h2 class="fw-black mb-0 text-primary">{{ stock }}</h2>
+                </div>
+                <div class="bg-light p-3 rounded-4 text-primary"><i class="fas fa-boxes fa-2xl"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4">
+            <h5 class="fw-bold mb-4"><i class="fas fa-chart-bar me-2"></i> مشتريات العملاء (هذا الشهر)</h5>
+            <div style="height: 350px;">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 h-100">
+            <h5 class="fw-bold mb-4 text-primary"><i class="fas fa-bolt me-2"></i> إجراءات سريعة</h5>
+            <div class="d-grid gap-3">
+                <a href="/invoices" class="btn btn-dark p-3 text-start d-flex align-items-center rounded-4">
+                    <i class="fas fa-search me-3 fs-4 text-warning"></i>
+                    <div>
+                        <span class="d-block fw-bold">البحث عن فاتورة</span>
+                        <small class="opacity-50">تتبع عمليات البيع السابقة</small>
+                    </div>
+                </a>
+                <a href="/upload" class="btn btn-dark p-3 text-start d-flex align-items-center rounded-4">
+                    <i class="fas fa-barcode me-3 fs-4 text-warning"></i>
+                    <div>
+                        <span class="d-block fw-bold">إضافة أكواد للمخزن</span>
+                        <small class="opacity-50">رفع المخزون الجديد</small>
+                    </div>
+                </a>
+                <a href="/users" class="btn btn-dark p-3 text-start d-flex align-items-center rounded-4">
+                    <i class="fas fa-user-edit me-3 fs-4 text-warning"></i>
+                    <div>
+                        <span class="d-block fw-bold">بيانات العملاء</span>
+                        <small class="opacity-50">إدارة الأرصدة والاشتراكات</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ chart_labels|tojson }},
+            datasets: [{
+                label: 'المبلغ المستهلك (د.ل)',
+                data: {{ chart_values|tojson }},
+                backgroundColor: 'rgba(243, 112, 33, 0.8)',
+                borderColor: '#f37021',
+                borderWidth: 1,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { drawBorder: false } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+</script>
+{% endblock %}

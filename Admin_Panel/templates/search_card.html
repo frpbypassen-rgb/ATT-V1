@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block title %}البحث عن كرت{% endblock %}
+{% block header_title %}استعلام عن بطاقة أو كود{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm p-4 mb-4 mx-auto" style="border-radius: 20px; max-width: 700px;">
+    <h5 class="fw-bold text-center mb-4"><i class="fas fa-search me-2 text-warning"></i> محرك بحث المخزن والمبيعات</h5>
+    <form method="POST" action="/search_card">
+        <div class="input-group input-group-lg shadow-sm" style="border-radius: 15px; overflow: hidden;">
+            <span class="input-group-text bg-white border-0"><i class="fas fa-barcode text-muted"></i></span>
+            <input type="text" name="query" class="form-control border-0 fs-6" placeholder="أدخل رقم الكود (PIN) أو السيريال للبحث..." required style="box-shadow: none;">
+            <button type="submit" class="btn btn-dark px-4 fw-bold">بحث</button>
+        </div>
+    </form>
+</div>
+
+{% if error %}
+<div class="alert alert-danger text-center fw-bold shadow-sm mx-auto" style="border-radius: 15px; max-width: 700px;">
+    <i class="fas fa-exclamation-triangle me-2"></i> {{ error }}
+</div>
+{% endif %}
+
+{% if result %}
+<div class="card border-0 shadow-sm p-4 mx-auto" style="border-radius: 20px; max-width: 700px; border-top: 5px solid {% if result.sold %}#dc3545{% else %}#198754{% endif %} !important;">
+    <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="fas fa-ticket-alt me-2 text-primary"></i> تفاصيل البطاقة</h5>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <p class="text-muted mb-1 small">اسم المنتج</p>
+            <h6 class="fw-bold text-dark">{{ result.product }}</h6>
+        </div>
+        <div class="col-md-6">
+            <p class="text-muted mb-1 small">القسم</p>
+            <h6 class="fw-bold text-dark">{{ result.category }}</h6>
+        </div>
+        <div class="col-md-6">
+            <p class="text-muted mb-1 small">كود الشحن (PIN)</p>
+            <h5 class="fw-black text-primary" style="letter-spacing: 2px;">{{ result.code }}</h5>
+        </div>
+        <div class="col-md-6">
+            <p class="text-muted mb-1 small">السيريال نمبر</p>
+            <h6 class="fw-bold text-secondary" style="letter-spacing: 1px;">{{ result.serial }}</h6>
+        </div>
+        <div class="col-md-6">
+            <p class="text-muted mb-1 small">سعر البيع المبرمج</p>
+            <h6 class="fw-bold text-success">{{ result.price }} د.ل</h6>
+        </div>
+        <div class="col-md-6">
+            <p class="text-muted mb-1 small">تاريخ الإضافة للمخزن</p>
+            <h6 class="fw-bold text-dark">{{ result.added_date }}</h6>
+        </div>
+    </div>
+
+    <div class="p-4 rounded-4 {% if result.sold %}bg-danger-subtle{% else %}bg-success-subtle{% endif %}">
+        <h5 class="fw-bold mb-3 d-flex align-items-center">
+            حالة البطاقة: 
+            {% if result.sold %}
+                <span class="badge bg-danger fs-6 ms-3"><i class="fas fa-shopping-cart me-1"></i> مباعة</span>
+            {% else %}
+                <span class="badge bg-success fs-6 ms-3"><i class="fas fa-check-circle me-1"></i> متاحة للبيع</span>
+            {% endif %}
+        </h5>
+
+        {% if result.sold %}
+        <hr style="border-color: rgba(0,0,0,0.1)">
+        <div class="row g-3 mt-1">
+            <div class="col-md-6">
+                <p class="text-muted mb-1 small">اسم المشتري</p>
+                <h6 class="fw-bold text-dark"><i class="fas fa-user-circle me-1 text-primary"></i> {{ result.customer_name }}</h6>
+            </div>
+            <div class="col-md-6">
+                <p class="text-muted mb-1 small">تاريخ ووقت الشراء</p>
+                <h6 class="fw-bold text-dark"><i class="fas fa-clock me-1 text-primary"></i> {{ result.sell_date }}</h6>
+            </div>
+            <div class="col-md-12 mt-3 text-center">
+                <a href="/download_invoice/{{ result.order_id }}" class="btn btn-dark fw-bold px-4 py-2" style="border-radius: 12px; width: 100%;">
+                    <i class="fas fa-file-excel text-success me-2 fs-5"></i> تحميل فاتورة الشراء المجمعة ({{ result.order_id }})
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

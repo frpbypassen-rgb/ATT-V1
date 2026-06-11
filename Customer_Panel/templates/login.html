@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة العملاء | دخول آمن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --brand-orange: #f37021; --brand-dark: #1e1e24; --input-bg: #f8fafc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background: #f0f2f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-card { background: #fff; border-radius: 32px; padding: 50px 45px; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.15); width: 100%; max-width: 460px; text-align: center; }
+        .logo-wrapper { height: 120px; margin-bottom: 35px; }
+        .logo-wrapper img { height: 100%; object-fit: contain; mix-blend-mode: multiply; filter: contrast(1.15) brightness(1.05); }
+        .form-control { width: 100%; height: 56px; background: var(--input-bg); border: 2px solid transparent; border-radius: 16px; padding: 0 50px 0 20px; font-size: 15px; font-weight: 700; outline: none; margin-bottom: 25px;}
+        .form-control:focus { border-color: var(--brand-orange); background: #fff; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; right: 18px; top: 18px; color: #94a3b8; }
+        .btn-login { width: 100%; height: 56px; background: var(--brand-dark); color: #fff; border: none; border-radius: 16px; font-size: 17px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn-login:hover { background: var(--brand-orange); }
+        .alert { background: #fff1f2; color: #e11d48; padding: 14px; border-radius: 12px; margin-bottom: 30px; font-weight: 700; font-size: 14px; }
+        .hint { margin-top: 25px; font-size: 13px; color: #64748b; font-weight: 600; line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo-wrapper">
+            <img src="{{ url_for('static', filename='images/alhram_logo.jpg') }}" alt="الأهرام">
+        </div>
+        <h2 style="font-weight: 800; color: var(--brand-dark); margin-bottom: 10px;">بوابة العملاء</h2>
+        <p style="color: #64748b; font-weight: 600; margin-bottom: 35px;">سجل دخولك لمتابعة رصيدك ومشترياتك</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for category, message in messages %}
+                <div class="alert"><i class="fas fa-exclamation-circle ms-2"></i>{{ message }}</div>
+            {% endfor %}{% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="input-wrapper">
+                <i class="fab fa-telegram-plane"></i>
+                <input type="number" name="tg_id" class="form-control" placeholder="رقم التليجرام (ID)" required>
+            </div>
+            <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" class="form-control" placeholder="كلمة المرور (6 أرقام)" required>
+            </div>
+            <button type="submit" class="btn-login">دخول للمنصة <i class="fas fa-arrow-left me-2"></i></button>
+        </form>
+
+        <div class="hint">
+            احصل على كلمة المرور الخاصة بك من خلال الضغط على زر <br> <b>(🌐 دخول الموقع)</b> داخل بوت الأهرام الرسمي.
+        </div>
+    </div>
+</body>
+</html>

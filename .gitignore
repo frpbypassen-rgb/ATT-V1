@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+mongodb_data/
+*.xlsx
+*.log
+*.jpg
+*.png
+receipts_output/
+Invoices_Archive/
+uploads/
+.idea/
+.vscode/
+*.pyc

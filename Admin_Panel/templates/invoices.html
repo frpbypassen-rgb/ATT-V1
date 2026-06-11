@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}سجل الفواتير{% endblock %}
+{% block header_title %}البحث في الفواتير والمبيعات{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm p-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-7">
+            <div class="input-group input-group-lg shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                <span class="input-group-text bg-white border-0"><i class="fas fa-search text-warning"></i></span>
+                <input type="text" id="invoiceSearch" class="form-control border-0 fs-6" placeholder="ابحث باسم العميل أو رقم الفاتورة..." style="box-shadow: none;">
+            </div>
+        </div>
+        <div class="col-md-5 text-start">
+            <button class="btn btn-outline-dark" onclick="location.reload()"><i class="fas fa-sync-alt"></i> تحديث البيانات</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle" id="invoicesTable">
+            <thead class="table-dark">
+                <tr>
+                    <th class="py-3">رقم الفاتورة</th>
+                    <th>اسم (معرف) العميل</th>
+                    <th>قيمة الفاتورة</th>
+                    <th>عدد الكروت</th>
+                    <th>التاريخ والوقت</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in invoices %}
+                <tr>
+                    <td>
+                        <a href="/download_invoice/{{ inv.order_id }}" class="fw-bold text-decoration-none text-success">
+                            <i class="fas fa-file-excel me-1"></i> {{ inv.order_id }}
+                        </a>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                <i class="fas fa-user text-muted" style="font-size: 12px;"></i>
+                            </div>
+                            <span class="fw-bold text-dark">{{ inv.customer_name }}</span>
+                        </div>
+                    </td>
+                    <td class="text-success fw-bold">{{ inv.total_price }} <small>د.ل</small></td>
+                    <td><span class="badge bg-light text-dark border">{{ inv.cards_count }} كروت</span></td>
+                    <td>
+                        <div class="fw-bold text-dark">{{ inv.date }}</div>
+                        <div class="text-muted small">{{ inv.time }}</div>
+                    </td>
+                    <td>
+                        <a href="/download_invoice/{{ inv.order_id }}" class="btn btn-sm btn-outline-success fw-bold">
+                            <i class="fas fa-file-excel"></i> تحميل إكسيل
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('invoiceSearch').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#invoicesTable tbody tr');
+        
+        rows.forEach(row => {
+            let orderID = row.cells[0].textContent.toLowerCase();
+            let customerName = row.cells[1].textContent.toLowerCase();
+            
+            if (orderID.includes(filter) || customerName.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}
