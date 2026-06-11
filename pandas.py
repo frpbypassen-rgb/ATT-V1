@@ -50,6 +50,9 @@ class Series:
     def __init__(self, values):
         self.values = list(values)
 
+    def __len__(self):
+        return len(self.values)
+
     @property
     def str(self):
         return StringMethods(self)
@@ -107,6 +110,9 @@ class DataFrame:
                 self.columns = list(self._data[0].keys())
             else:
                 self.columns = []
+
+    def __len__(self):
+        return len(self._data)
 
     @property
     def empty(self):
@@ -206,10 +212,16 @@ class DataFrame:
 def read_excel(filepath, skiprows=0):
     if isinstance(filepath, io.BytesIO):
         wb = openpyxl.load_workbook(filepath)
+        ws = wb.active
+        rows = list(ws.iter_rows(values_only=True))
+        wb.close()
     else:
-        wb = openpyxl.load_workbook(filepath)
-    ws = wb.active
-    rows = list(ws.iter_rows(values_only=True))
+        with open(filepath, 'rb') as f:
+            wb = openpyxl.load_workbook(f)
+            ws = wb.active
+            rows = list(ws.iter_rows(values_only=True))
+            wb.close()
+            
     if len(rows) <= skiprows:
         return DataFrame()
     
